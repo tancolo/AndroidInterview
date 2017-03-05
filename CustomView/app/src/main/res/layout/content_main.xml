@@ -14,33 +14,39 @@
     tools:context="view.custom.shrimpcolo.com.customview.MainActivity"
     tools:showIn="@layout/activity_main">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Hello World!" />
-    <Button
-        android:id="@+id/button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Click" />
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Hello World!" />-->
+    <!--<Button-->
+        <!--android:id="@+id/button"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:text="Click" />-->
 
-    <view.custom.shrimpcolo.com.customview.MyLinearLayout
-        android:id="@+id/my_linearlayout"
+    <!--<view.custom.shrimpcolo.com.customview.MyLinearLayout-->
+        <!--android:id="@+id/my_linearlayout"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="400dp"-->
+        <!--android:orientation="vertical">-->
+        <!--<Button-->
+            <!--android:id="@+id/button1"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Button1" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/button2"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Button2" />-->
+
+    <!--</view.custom.shrimpcolo.com.customview.MyLinearLayout>-->
+
+    <view.custom.shrimpcolo.com.customview.MyView
         android:layout_width="match_parent"
-        android:layout_height="400dp"
-        android:orientation="vertical">
-        <Button
-            android:id="@+id/button1"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button1" />
-
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Button2" />
-
-    </view.custom.shrimpcolo.com.customview.MyLinearLayout>
+        android:layout_height="match_parent"
+        app:Text="test by tan"
+        app:TextColor="#f00" />
 
 </LinearLayout>

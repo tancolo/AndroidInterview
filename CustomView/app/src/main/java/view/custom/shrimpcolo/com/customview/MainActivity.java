@@ -11,6 +11,8 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Button;
+import android.widget.ListView;
+import android.widget.ScrollView;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnTouchListener{
 
@@ -20,65 +22,66 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button button2;
     private MyLinearLayout myLinearLayout;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
-
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
-        clickButton = (Button)findViewById(R.id.button);
+//        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+//        setSupportActionBar(toolbar);
+//
+//        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+//        fab.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                        .setAction("Action", null).show();
+//            }
+//        });
+        //clickButton = (Button)findViewById(R.id.button);
 //        clickButton.setOnClickListener(this);
 //        clickButton.setOnTouchListener(this);
 
-        myLinearLayout = (MyLinearLayout)findViewById(R.id.my_linearlayout);
-        button1 = (Button) findViewById(R.id.button1);
-        button2 = (Button) findViewById(R.id.button2);
+//        myLinearLayout = (MyLinearLayout)findViewById(R.id.my_linearlayout);
+//        button1 = (Button) findViewById(R.id.button1);
+//        button2 = (Button) findViewById(R.id.button2);
 
-        myLinearLayout.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("TAG", "myLayout on touch");
-                return false;
-            }
-        });
-
-        myLinearLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG", "You clicked MyLayout！");
-            }
-        });
-
-        button1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG", "You clicked button1");
-            }
-        });
-
-        button1.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                Log.d("TAG", "button1 111 on touch");
-                return false;
-            }
-        });
-
-        button2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("TAG", "You clicked button2");
-            }
-        });
+//        myLinearLayout.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("TAG", "myLayout on touch");
+//                return false;
+//            }
+//        });
+//
+//        myLinearLayout.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("TAG", "You clicked MyLayout！");
+//            }
+//        });
+//
+//        button1.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("TAG", "You clicked button1");
+//            }
+//        });
+//
+//        button1.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                Log.d("TAG", "button1 111 on touch");
+//                return false;
+//            }
+//        });
+//
+//        button2.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                Log.d("TAG", "You clicked button2");
+//            }
+//        });
     }
 
     @Override
