@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.jakewharton.rxbinding.view.RxView;
 
 import rx.Observable;
+import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -50,7 +51,7 @@ public class FlowLayoutActivity extends AppCompatActivity {
                     }
                 });
 
-        Observable<View> clickedItemViews = itemViews
+        Subscription subscription = itemViews
                 .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
@@ -74,14 +75,30 @@ public class FlowLayoutActivity extends AppCompatActivity {
                     public View call(String name) {
                         return createItemView(name);
                     }
-                });  // Observable<View>
-
-        clickedItemViews.subscribe(new Action1<View>() {
-            @Override
-            public void call(View view) {
-                mFlowLayoutPink.addView(view);
-            }
-        });
+                })  // Observable<View> clicked view
+                .doOnNext(new Action1<View>() {
+                    @Override
+                    public void call(View view) {
+                        mFlowLayoutPink.addView(view);
+                    }
+                })
+                .flatMap(new Func1<View, Observable<View>>() {
+                    @Override
+                    public Observable<View> call(final View view) {
+                        return RxView.clicks(view).map(new Func1<Void, View>() {
+                            @Override
+                            public View call(Void aVoid) {
+                                return view;
+                            }
+                        });
+                    }
+                })
+                .subscribe(new Action1<View>() {
+                    @Override
+                    public void call(View view) {
+                        mFlowLayoutPink.removeView(view);
+                    }
+                });
     }
 
     private String getItemName(View view) {
@@ -89,12 +106,6 @@ public class FlowLayoutActivity extends AppCompatActivity {
 
         TextView nameTxt = (TextView) view.findViewById(R.id.tv);
         return nameTxt.getText().toString();
-    }
-
-    private void doAction(View v) {
-//        addViewToFlowlayout1(i);
-//        rl2.setBackgroundResource(R.drawable.flow_layout_disable_bg);
-//        rl2.setClickable(false);
     }
 
     private View createItemView(String name) {
