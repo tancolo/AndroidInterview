@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -17,6 +18,8 @@ import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import java.util.HashMap;
+
 import rx.Observable;
 import rx.Subscription;
 import rx.android.schedulers.AndroidSchedulers;
@@ -24,7 +27,6 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 
 import static android.text.TextUtils.isEmpty;
-
 
 public class FlowLayoutActivity extends AppCompatActivity {
 
@@ -52,12 +54,8 @@ public class FlowLayoutActivity extends AppCompatActivity {
         Observable<View> itemViews = Observable
                 .from(mVals)  // Observable<String>
                 .map(new Func1<String, View>() {
-                    int number = 0;
                     @Override
                     public View call(String name) {
-                        number++;
-                        //Log.d("aaa", "name: " + name + ", hashcode: " + name.hashCode() + ",  number: " + number);
-
                         return createItemView(name);
                     }
                 });
@@ -66,29 +64,33 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
-                        Log.d("aaa", "view.hashcode: " + view.hashCode());
-                        view.setTag(view.hashCode());
+                        //Log.d("aaa", "view.hashcode: " + view.hashCode());
                         mFlowLayoutYellow.addView(view);
                     }
                 })
-                .flatMap(new Func1<View, Observable<String>>() {
+                .flatMap(new Func1<View, Observable<Pair<Integer, String>>>() {
                     @Override
-                    public Observable<String> call(final View view) {
+                    public Observable<Pair<Integer, String>> call(final View view) {
                         return RxView.clicks(view)
-                                .map(new Func1<Void, String>() {
+                                .map(new Func1<Void, Pair<Integer, String>>() {
                                     @Override
-                                    public String call(Void aVoid) {
+                                    public Pair<Integer, String> call(Void aVoid) {
                                         view.setEnabled(false);
                                         view.setBackgroundResource(R.drawable.flow_layout_disable_bg);
-                                        return getItemName(view);
+                                        //Log.d("aaa", "Clicked View's HashCode: " + view.hashCode());
+
+                                        return getItemViewPair(view);
+//                                        Pair<Integer, String> pair = getItemViewPair(view);
+//                                        Log.d("aaa", "click view's hashCode: " + pair.first + ", name: " + pair.second);
+//                                        return pair;
                                     }
                                 });
                     }
-                })  // Observable<String>
-                .map(new Func1<String, View>() {
+                })  // Observable<Pair<Integer, String>>
+                .map(new Func1<Pair<Integer, String>, View>() {
                     @Override
-                    public View call(String name) {
-                        return createItemView(name);
+                    public View call(Pair<Integer, String> itemViewPair) {
+                        return createItemViewByPair(itemViewPair);
                     }
                 })  // Observable<View> clicked view
                 .doOnNext(new Action1<View>() {
@@ -102,12 +104,14 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 .flatMap(new Func1<View, Observable<View>>() {
                     @Override
                     public Observable<View> call(final View view) {
-                        return RxView.clicks(view).map(new Func1<Void, View>() {
-                            @Override
-                            public View call(Void aVoid) {
-                                return view;
-                            }
-                        });
+                        return RxView.clicks(view)
+                                .map(new Func1<Void, View>() {
+                                    @Override
+                                    public View call(Void aVoid) {
+                                        //Log.e("aaa", "Click Pink's View: getTag(): " + view.getTag());
+                                        return view;
+                                    }
+                                });
                     }
                 })
                 .doOnNext(new Action1<View>() {
@@ -119,6 +123,7 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 .map(new Func1<View, View>() {
                     @Override
                     public View call(View view) {
+                        //Log.e("aaa", "==> Clicked Pink's View: getTag(): " + view.getTag());
                         return findViewInYellow(view);
                     }
                 }).subscribe(new Action1<View>() {
@@ -132,25 +137,59 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 });
     }
 
+    private Pair<Integer,String> getItemViewPair(View view) {
+        if (view == null) return null;
+
+        TextView nameTxt = (TextView) view.findViewById(R.id.tv);
+        String name = nameTxt.getText().toString();
+        return Pair.create(view.hashCode(), name);//使用hashCode
+    }
+
+    private View createItemViewByPair(Pair<Integer, String> itemViewPair) {
+        //Log.d("aaa", "createItemViewByPair==》 hashCode: " + itemViewPair.first + ", name: " + itemViewPair.second);
+        RelativeLayout itemView = (RelativeLayout) mLayoutInflater.inflate(R.layout.flow_layout, mFlowLayoutYellow, false);
+        itemView.setTag(itemViewPair.first);
+
+        TextView textView = (TextView) itemView.findViewById(R.id.tv);
+        textView.setText(itemViewPair.second);
+
+        //Log.d("aaa", "createItemViewByPair==》 itemView.getTag(): " + itemView.getTag() + ", name: " + textView.getText().toString());
+        return itemView;
+    }
+
     @Nullable
     private View findViewInYellow(View view) {
-        String name = getItemName(view);
-        if (isEmpty(name)) return null;
+        Pair<Integer, String> viewPair = getItemViewPairByTag(view);
+        //Log.d("aaa", "findViewInYellow: hashCode: " + viewPair.first + ", name: " + viewPair.second);
+        if (isEmpty(viewPair.second)) return null;
 
         for(int index = 0; index < mFlowLayoutYellow.getChildCount(); index++) {
             View itemView = mFlowLayoutYellow.getChildAt(index);
-            String targetName = getItemName(itemView);
-            if (name.equals(targetName)) return itemView;
+            Pair<Integer, String> targetViewPair = getItemViewPair(itemView);
+            if (viewPair.first.intValue() == targetViewPair.first.intValue()) {
+                //Log.d("aaa", "Finded the View");
+                return itemView;
+            }
         }
 
         return null;
     }
 
-    private String getItemName(View view) {
+    private Pair<Integer,String> getItemViewPairByTag(View view) {
         if (view == null) return null;
 
         TextView nameTxt = (TextView) view.findViewById(R.id.tv);
-        return nameTxt.getText().toString();
+        String name = nameTxt.getText().toString();
+        return Pair.create((Integer)view.getTag(), name);
+    }
+
+    private Pair<Integer, String> getItemName(View view) {
+        if (view == null) return null;
+
+        TextView nameTxt = (TextView) view.findViewById(R.id.tv);
+        String name = nameTxt.getText().toString();
+        return Pair.create(view.hashCode(), name);
+
     }
 
     private View createItemView(String name) {
@@ -158,7 +197,6 @@ public class FlowLayoutActivity extends AppCompatActivity {
         TextView textView = (TextView) itemView.findViewById(R.id.tv);
         textView.setText(name);
 
-        //itemView.setTag(number);
         return itemView;
     }
 
