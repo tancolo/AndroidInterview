@@ -29,8 +29,8 @@ public class FlowLayout  extends ViewGroup{
         int modeWidth = MeasureSpec.getMode(widthMeasureSpec);
         int modeHeight = MeasureSpec.getMode(heightMeasureSpec);
 
-        Log.e(TAG, "TANHQ===> onMeasure: sizeWidth: " + sizeWidth + ", sizeHeight: " + sizeHeight
-        + ", modeWidth: " + modeWidth + ", modeHeight: " + modeHeight);
+//        Log.e(TAG, "TANHQ===> onMeasure: sizeWidth: " + sizeWidth + ", sizeHeight: " + sizeHeight
+//        + ", modeWidth: " + modeWidth + ", modeHeight: " + modeHeight);
 
         // 用于warp_content情况下，来记录父view宽和高
         int width = 0;
@@ -95,7 +95,7 @@ public class FlowLayout  extends ViewGroup{
         //mLineViews.clear();
         mAllViews.clear();
         mLineHeight.clear();
-        Log.e(TAG, "TANHQ===> onLayout!");
+        //Log.e(TAG, "TANHQ===> onLayout!");
 
         int width = getWidth(); // 当前ViewGroup的宽度
 

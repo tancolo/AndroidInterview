@@ -1,8 +1,13 @@
 package view.custom.shrimpcolo.com.customview;
 
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +23,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 
+import static android.text.TextUtils.isEmpty;
+
 
 public class FlowLayoutActivity extends AppCompatActivity {
 
@@ -27,7 +34,7 @@ public class FlowLayoutActivity extends AppCompatActivity {
 
     private String[] mVals = new String[]
             {"Do", "one thing", "at a time", "and do well.", "Never", "forget",
-                    "to say", "thanks.", "Keep on", "going ", "never give up."};
+                    "to say", "thanks.", "Keep on", "going ", "never give up.", "Do"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +52,12 @@ public class FlowLayoutActivity extends AppCompatActivity {
         Observable<View> itemViews = Observable
                 .from(mVals)  // Observable<String>
                 .map(new Func1<String, View>() {
+                    int number = 0;
                     @Override
                     public View call(String name) {
+                        number++;
+                        //Log.d("aaa", "name: " + name + ", hashcode: " + name.hashCode() + ",  number: " + number);
+
                         return createItemView(name);
                     }
                 });
@@ -55,6 +66,8 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
+                        Log.d("aaa", "view.hashcode: " + view.hashCode());
+                        view.setTag(view.hashCode());
                         mFlowLayoutYellow.addView(view);
                     }
                 })
@@ -65,6 +78,8 @@ public class FlowLayoutActivity extends AppCompatActivity {
                                 .map(new Func1<Void, String>() {
                                     @Override
                                     public String call(Void aVoid) {
+                                        view.setEnabled(false);
+                                        view.setBackgroundResource(R.drawable.flow_layout_disable_bg);
                                         return getItemName(view);
                                     }
                                 });
@@ -79,6 +94,8 @@ public class FlowLayoutActivity extends AppCompatActivity {
                 .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
+                        ImageView imageView = (ImageView) view.findViewById(R.id.iv);
+                        imageView.setVisibility(View.VISIBLE);
                         mFlowLayoutPink.addView(view);
                     }
                 })
@@ -93,12 +110,40 @@ public class FlowLayoutActivity extends AppCompatActivity {
                         });
                     }
                 })
-                .subscribe(new Action1<View>() {
+                .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
                         mFlowLayoutPink.removeView(view);
                     }
+                })
+                .map(new Func1<View, View>() {
+                    @Override
+                    public View call(View view) {
+                        return findViewInYellow(view);
+                    }
+                }).subscribe(new Action1<View>() {
+                    @Override
+                    public void call(View view) {
+                        if (view != null) {
+                            view.setEnabled(true);
+                            view.setBackgroundResource(R.drawable.flow_layout_bg);
+                        }
+                    }
                 });
+    }
+
+    @Nullable
+    private View findViewInYellow(View view) {
+        String name = getItemName(view);
+        if (isEmpty(name)) return null;
+
+        for(int index = 0; index < mFlowLayoutYellow.getChildCount(); index++) {
+            View itemView = mFlowLayoutYellow.getChildAt(index);
+            String targetName = getItemName(itemView);
+            if (name.equals(targetName)) return itemView;
+        }
+
+        return null;
     }
 
     private String getItemName(View view) {
@@ -112,6 +157,8 @@ public class FlowLayoutActivity extends AppCompatActivity {
         RelativeLayout itemView = (RelativeLayout) mLayoutInflater.inflate(R.layout.flow_layout, mFlowLayoutYellow, false);
         TextView textView = (TextView) itemView.findViewById(R.id.tv);
         textView.setText(name);
+
+        //itemView.setTag(number);
         return itemView;
     }
 
