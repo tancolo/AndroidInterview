@@ -2,4 +2,6 @@
     <string name="app_name">CustomView</string>
     <string name="flow_activity_name">FlowActivity</string>
     <string name="action_settings">Settings</string>
+    <string name="title_activity_carousel_view">CarouselViewActivity</string>
+    <string name="title_activity_carousel_view">CarouselViewActivity</string>
 </resources>
