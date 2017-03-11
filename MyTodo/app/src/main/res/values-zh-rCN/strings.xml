@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">记事本</string>
+
+    <string name="navigation_drawer_open">打开导航栏</string>
+    <string name="navigation_drawer_close">关闭导航栏</string>
+
+    <string name="action_settings">设置</string>
+    <string name="navigation_view_header_title">我的记事本</string>
+    <string name="list_title">记事列表</string>
+    <string name="statistics_title">记事本统计</string>
+</resources>
