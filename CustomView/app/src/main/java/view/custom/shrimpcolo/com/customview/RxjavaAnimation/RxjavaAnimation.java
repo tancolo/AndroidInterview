@@ -1,18 +1,24 @@
 package view.custom.shrimpcolo.com.customview.RxjavaAnimation;
 
+import android.animation.ValueAnimator;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.jakewharton.rxbinding.view.RxView;
 
+import oxim.digital.rxanim.RxAnimationBuilder;
+import oxim.digital.rxanim.RxObservableValueAnimator;
+import oxim.digital.rxanim.RxValueAnimator;
 import rx.Observable;
 import rx.Subscription;
+import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import view.custom.shrimpcolo.com.customview.FlowLayout;
@@ -46,8 +52,7 @@ public class RxjavaAnimation extends AppCompatActivity {
     }
 
     private void initFlowlayoutWithRxJava() {
-        Observable<View> itemViews = Observable
-                .from(stringArray)
+        Observable<View> itemViews = Observable.from(stringArray)
                 .map(new Func1<String, View>() {
                     @Override
                     public View call(String name) {
@@ -59,29 +64,64 @@ public class RxjavaAnimation extends AppCompatActivity {
                 .doOnNext(new Action1<View>() {
                     @Override
                     public void call(View view) {
-                        mFlowLayoutTransparent.addView(view);
+                        addView(view);
                     }
                 })
                 .flatMap(new Func1<View, Observable<View>>() {
                     @Override
-                    public Observable<View> call(final View view) {
-                        return RxView.touches(view)
-                                .map(new Func1<MotionEvent, View>() {
-                                    @Override
-                                    public View call(MotionEvent motionEvent) {
-                                        Direction direction = getMoveDirection(motionEvent);
-                                        view.setTag(direction);//存储view滑动方向
-                                        return view;
-                                    }
-                                });
+                    public Observable<View> call(View view) {
+                        return touchView(view);
                     }
                 })
                 .subscribe(new Action1<View>() {
                     @Override
                     public void call(View view) {
-                        viewMoving(view);
+                        move(view);
                     }
                 });
+    }
+
+    private void addView(View view) {
+        mFlowLayoutTransparent.addView(view);
+    }
+
+    private void move(final View view) {
+        RxAnimationBuilder.animate(view, 2000)
+                .translateY(1100)
+                .schedule(false)
+                .subscribe();
+
+//        Direction direction = (Direction) view.getTag();
+//        int xValue = 0;
+//        int yValue = 0;
+//
+//        if(direction != Direction.NONE) {
+//            if(direction == Direction.DOWN) {
+//                xValue = view.getLeft();
+//                yValue = mFlowLayoutTransparent.getHeight() - mFlowLayoutStub.getHeight() + view.getTop();
+//            } else if(direction == Direction.UP) {
+//                xValue = view.getLeft();
+//                yValue = view.getTop();
+//            }
+//
+////            view.animate().setDuration(1000);
+////            view.animate().x(xValue).y(yValue);
+//        }
+    }
+
+    private Observable<View> touchView(final View view) {
+        return RxView.touches(view).map(new Func1<MotionEvent, View>() {
+            @Override
+            public View call(MotionEvent motionEvent) {
+                return buildView(motionEvent, view);
+            }
+        });
+    }
+
+    private View buildView(MotionEvent motionEvent, View view) {
+        Direction direction = getMoveDirection(motionEvent);
+        view.setTag(direction);//存储view滑动方向
+        return view;
     }
 
     private void viewMoving(View view) {
