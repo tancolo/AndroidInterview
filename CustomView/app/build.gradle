@@ -10,15 +10,20 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-
-//        jackOptions {
-//            enabled true
-//        }
     }
-//    compileOptions {
-//        sourceCompatibility JavaVersion.VERSION_1_8
-//        targetCompatibility JavaVersion.VERSION_1_8
+
+//    packagingOptions {
+//        exclude 'META-INF/LICENSE'
+//        exclude 'META-INF/NOTICE'
+//        exclude 'META-INF/INDEX.LIST'
 //    }
+
+    //retrolambda configuration
+    compileOptions {
+       sourceCompatibility JavaVersion.VERSION_1_8
+       targetCompatibility JavaVersion.VERSION_1_8
+    }
+    //end
 
     buildTypes {
         release {
@@ -29,7 +34,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -37,11 +42,12 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.2.0'
     compile 'com.android.support:design:25.2.0'
     testCompile 'junit:junit:4.12'
-//    compile "io.reactivex.rxjava2:rxjava:2.0.1"
-//    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
+    //    compile "io.reactivex.rxjava2:rxjava:2.0.1"
+    //    compile 'io.reactivex.rxjava2:rxandroid:2.0.1'
     compile 'com.jakewharton.rxbinding:rxbinding:1.0.1'
     compile 'oxim.digital:rxanim:0.9.1'
-
-//    compile 'io.reactivex:rxandroid:1.2.1'
-//    compile 'io.reactivex:rxjava:1.2.5'
+    //    compile 'io.reactivex:rxandroid:1.2.1'
+    //    compile 'io.reactivex:rxjava:1.2.5'
+    //vertx
+//    compile 'io.vertx:vertx-core:3.4.1'
 }
