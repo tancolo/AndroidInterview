@@ -1,13 +1,18 @@
 package com.shrimpcolo.www.todokotlin.data
 
+import com.shrimpcolo.www.todokotlin.Noarg
+import com.shrimpcolo.www.todokotlin.Open
+import io.realm.RealmObject
 import java.util.*
 
 /**
  * Created by Johnny Tam on 2017/4/4.
  */
-data class Task(val title: String, val description: String,
-                val id: String = UUID.randomUUID().toString(),
-                val isCompleted : Boolean = false) {
+@Noarg
+@Open
+data class Task(var title: String, var description: String,
+                var id: String = UUID.randomUUID().toString(),
+                var isCompleted : Boolean = false) : RealmObject() {
 
     fun getTitleForList(): String = if (title.isEmpty()) description else title
 

@@ -1,6 +1,18 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'realm-android'
+apply plugin: "kotlin-noarg"
+apply plugin: "kotlin-allopen"
+
+noArg {
+    annotation("com.shrimpcolo.www.todokotlin.Noarg")
+}
+
+allOpen {
+    annotation("com.shrimpcolo.www.todokotlin.Open")
+}
+
 android {
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
@@ -29,4 +41,5 @@ dependencies {
     testCompile 'junit:junit:4.12'
 
     compile "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
+    compile 'io.reactivex:rxkotlin:1.0.0'
 }
