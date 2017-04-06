@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">TodoKotlin</string>
+    <string name="task_add">Add Task</string>
+    <string name="task_query_all">Query All Tasks</string>
+    <string name="task_query_one">Query One Task</string>
+    <string name="task_delete_all">Delete All Tasks</string>
+    <string name="task_delete_one">Delete One Task</string>
 </resources>

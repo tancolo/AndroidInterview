@@ -16,9 +16,9 @@ interface DataSource<T> {
 
     fun save(data: T)
 
-//    fun deleteAll()
-//
-//    fun deleteTask(id: String)
+    fun deleteAll()
+
+    fun deleteOne(id: String)
 
 //    fun completeTask(task: Task)
 //

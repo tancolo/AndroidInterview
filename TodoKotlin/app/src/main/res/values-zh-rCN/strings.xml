@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="task_add">添加任务</string>
+    <string name="task_query_all">查询所有任务</string>
+    <string name="task_query_one">查询单个任务</string>
+    <string name="task_delete_all">删除所有任务</string>
+    <string name="task_delete_one">删除单个任务</string>
+
+</resources>

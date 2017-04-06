@@ -44,9 +44,10 @@ class MainActivity : AppCompatActivity() {
                     .subscribe {
                         Log.d(TAG, " Query Tasks 111 ! ")
                         it.forEach { task ->
-                            container.addView(TextView(this@MainActivity).apply {
-                                text = task.toString()
-                            })
+                            Log.d(TAG, " task: $task")
+//                            container.addView(TextView(this@MainActivity).apply {
+//                                text = task.toString()
+//                            })
                         }
                     }
         }
@@ -58,9 +59,30 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, " find task: $it")
                     }
         }
+
+        btnDeleteAll.setOnClickListener {
+            Log.d(TAG, " Delete All tasks")
+
+            TaskDataSource.deleteAll()
+
+        }
+
+        btnDeleteOne.setOnClickListener {
+            Log.d(TAG, " Delete One task")
+
+            TaskDataSource.deleteOne("dc08fdef-f3b2-41c3-9a0d-a687d6687f65")
+        }
     }
 
 
+    override fun onDestroy() {
+        TaskDataSource.close()
+        super.onDestroy()
+    }
+
+    fun Realm.rxExecuteTransaction(transaction: (Realm) -> Unit): Single<Unit> = Single.create<Unit> { subscriber ->
+        executeTransactionAsync(transaction, { subscriber.onSuccess(null) }, { subscriber.onError(it) })
+    }
 
     private fun addTasks(task: Task) {
 
@@ -78,14 +100,5 @@ class MainActivity : AppCompatActivity() {
 //        }, {
 //            realm.rxExecuteTransaction { realm.deleteAll() }.subscribe()
 //        })
-    }
-
-    override fun onDestroy() {
-        TaskDataSource.close()
-        super.onDestroy()
-    }
-
-    fun Realm.rxExecuteTransaction(transaction: (Realm) -> Unit): Single<Unit> = Single.create<Unit> { subscriber ->
-        executeTransactionAsync(transaction, { subscriber.onSuccess(null) }, { subscriber.onError(it) })
     }
 }
